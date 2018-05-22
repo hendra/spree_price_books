@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "PriceBooks Feature", js: true do
+describe "PriceBooks Feature", type: :feature, js: true do
   stub_authorization!
 
   before do

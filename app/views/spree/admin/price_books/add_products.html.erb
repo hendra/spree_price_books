@@ -3,8 +3,6 @@
   <span class="green">"<%= @price_book.name %>"</span>
 <% end %>
 
-<%= render :partial => 'spree/admin/shared/product_sub_menu' %>
-
 <% if @price_book.explicit? %>
   <h4><%= Spree.t(:products) %></h4><br />
 

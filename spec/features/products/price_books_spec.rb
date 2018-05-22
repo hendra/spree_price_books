@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Price Books", js: true do
+describe "Price Books", type: :feature, js: true do
 
   after do
     Spree::Config[:currency] = 'USD'
@@ -31,19 +31,19 @@ describe "Price Books", js: true do
 
   context 'when only list books active' do
     before do
-      ApplicationController.any_instance.stub(:current_store) { store.reload }
+      allow(ApplicationController).to receive(:current_store) { store.reload }
     end
 
     it 'displays proper price when currency changed' do
       visit spree.nested_taxons_path(taxon.permalink)
-      within '#products li' do
+      within '#products div' do
         expect(page).to have_content('£19.99')
       end
 
       select 'USD', from: 'currency'
       wait_for_ajax
 
-      within '#products li' do
+      within '#products div' do
         expect(page).to have_content('$49.98')
       end
     end
@@ -53,12 +53,12 @@ describe "Price Books", js: true do
     before do
       price_book_3 = create(:factored_price_book, currency: 'USD', discount: true, parent: price_book_2, price_adjustment_factor: 0.5)
       store.price_books << price_book_3
-      ApplicationController.any_instance.stub(:current_store) { store.reload }
+      allow(ApplicationController).to receive(:current_store) { store.reload }
     end
 
     it 'should display list and sale price' do
       visit spree.nested_taxons_path(taxon.permalink)
-      within '#products li' do
+      within '#products div' do
         expect(page).to have_content('£19.99')
       end
 
@@ -66,7 +66,7 @@ describe "Price Books", js: true do
       wait_for_ajax
 
       # On products#index page
-      within '#products li' do
+      within '#products div' do
         expect(page).to have_content('$24.99')
         find('a').click
       end

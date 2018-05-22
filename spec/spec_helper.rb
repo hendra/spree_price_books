@@ -1,5 +1,7 @@
 # Run Coverage report
 require 'simplecov'
+require 'capybara/rspec'
+require 'capybara-screenshot/rspec'
 SimpleCov.start do
   add_filter 'spec/dummy'
   add_group 'Controllers', 'app/controllers'
@@ -19,6 +21,7 @@ require 'rspec/rails'
 require 'database_cleaner'
 require 'ffaker'
 require 'timecop'
+require 'rspec/active_model/mocks'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -35,7 +38,7 @@ require 'spree/testing_support/url_helpers'
 require 'spree_price_books/factories'
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   # == URL Helpers
   #
@@ -69,8 +72,9 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with :truncation
   end
 
-  # Before each spec check if it is a Javascript test and switch between using database transactions or not where necessary.
-  config.before :each do
+  config.before :each do |example|
+    Rails.cache.delete("default_store")
+    # Before each spec check if it is a Javascript test and switch between using database transactions or not where necessary.
     DatabaseCleaner.strategy = example.metadata[:js] ? :truncation : :transaction
     DatabaseCleaner.start
   end

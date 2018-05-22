@@ -1,12 +1,11 @@
 require 'spec_helper'
 
-describe "Price Books - " do
+describe "Price Books - ", type: :feature do
   stub_authorization!
 
   before(:each) do
     Spree::PriceBook.default
-    visit spree.admin_price_books_path
-    within('.main-menu-wrapper') { click_link "Products" }
+    visit spree.admin_products_path
   end
 
   context "Default PriceBook has products" do

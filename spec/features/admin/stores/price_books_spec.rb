@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Store Management - Price Books", js: true do
+describe "Store Management - Price Books", type: :feature, js: true do
 
   stub_authorization!
 

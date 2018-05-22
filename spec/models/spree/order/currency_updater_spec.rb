@@ -3,13 +3,14 @@ require 'spec_helper'
 describe Spree::Order do
   context 'CurrencyUpdater' do
     context "when changing order currency" do
+      let!(:store) { line_item.order.store }
       let!(:line_item) { create(:line_item) }
       let!(:euro_price) {
         create(:price,
           variant: line_item.variant,
           amount: 8,
           currency: 'EUR',
-          price_book: create(:active_price_book, currency: 'EUR', discount: true, priority: 1)
+          price_book: create(:active_price_book, currency: 'EUR', discount: true, priority: 1, stores: [store])
         )
       }
       let!(:euro_list_price) {
@@ -17,7 +18,7 @@ describe Spree::Order do
           variant: line_item.variant,
           amount: 18,
           currency: 'EUR',
-          price_book: create(:active_price_book, currency: 'EUR', discount: false, priority: 0)
+          price_book: create(:active_price_book, currency: 'EUR', discount: false, priority: 0, stores: [store])
         )
       }
 
@@ -39,7 +40,7 @@ describe Spree::Order do
         end
 
         it "fails to change the order currency when no prices are available in that currency" do
-          expect { line_item.order.update_attributes!(currency: 'CNY') }.to raise_error
+          expect { line_item.order.update_attributes!(currency: 'CNY') }.to raise_error RuntimeError
         end
 
         it "calculates the item total in the order.currency" do

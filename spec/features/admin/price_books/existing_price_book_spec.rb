@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe "Price Books - Existing" do
+describe "Price Books - Existing", type: :feature do
   stub_authorization!
 
   before(:each) do
     Spree::PriceBook.default
     create :price_book
-    visit spree.admin_price_books_path
-    within('.main-menu-wrapper') { click_link "Products" }
+    visit spree.admin_products_path
     click_link "Price Books"
   end
 
@@ -17,8 +16,8 @@ describe "Price Books - Existing" do
     expect(page).to have_content %q(Price Book "Default")
   end
 
-  it "can update a PriceBook" do
-    find('.admin_edit_price_book:last-child').click
+  it "can update a PriceBook", js: true do
+    click_icon :edit
 
     fill_in 'price_book_name', with: 'TEST'
     select 'GEL', from: 'price_book_currency'
@@ -31,7 +30,7 @@ describe "Price Books - Existing" do
   end
 
   it "can remove a PriceBook", js: true do
-    click_icon :trash
+    click_icon :delete
     page.driver.browser.switch_to.alert.accept
     wait_for_ajax
 

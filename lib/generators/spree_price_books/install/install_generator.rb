@@ -26,6 +26,10 @@ module SpreePriceBooks
           puts 'Skipping rake db:migrate, don\'t forget to run it!'
         end
       end
+
+      def install_multi_currency
+        run 'bundle exec rails g spree_multi_currency:install --auto_run_migrations'
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'Admin - Currency Rates - New', js: true do
+describe 'Admin - Currency Rates - New', type: :feature, js: true do
   stub_authorization!
 
   before do
