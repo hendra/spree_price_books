@@ -1,72 +1,32 @@
 require 'spec_helper'
 
 describe Spree::OrderContents do
-  let(:order) { Spree::Order.create }
-  let(:variant) { create(:variant) }
-
-  subject { described_class.new(order) }
-
-  context "#add" do
-    context 'given quantity is not explicitly provided' do
-      it 'should add one line item' do
-        line_item = subject.add(variant)
-        line_item.quantity.should == 1
-        order.line_items.size.should == 1
+  describe '#add' do
+    context "with separate price books for stores" do
+      let(:price_book_1) {create :price_book}
+      let(:price_book_2) {create :price_book}
+      let(:store_1) do
+        store = create :store
+        store.price_books << price_book_1
+        store
       end
-    end
-
-    it 'should add line item if one does not exist' do
-      line_item = subject.add(variant, 1)
-      line_item.quantity.should == 1
-      order.line_items.size.should == 1
-    end
-
-    it 'should update line item if one exists' do
-      subject.add(variant, 1)
-      line_item = subject.add(variant, 1)
-      line_item.quantity.should == 2
-      order.line_items.size.should == 1
-    end
-
-    it "should update order totals" do
-      order.item_total.to_f.should == 0.00
-      order.total.to_f.should == 0.00
-
-      subject.add(variant, 1)
-
-      order.item_total.to_f.should == 19.99
-      order.total.to_f.should == 19.99
-    end
-
-    context "running promotions" do
-      let(:promotion) { create(:promotion) }
-      let(:calculator) { Spree::Calculator::FlatRate.new(:preferred_amount => 10) }
-
-      shared_context "discount changes order total" do
-        before { subject.add(variant, 1) }
-        it { expect(subject.order.total).not_to eq variant.price }
+      let(:store_2) do
+        store = create :store
+        store.price_books << price_book_2
+        store
       end
+      let(:variant) { create :variant }
+      let!(:price_1) { create :price, variant_id: variant.id, price_book_id: price_book_1.id, amount: 10.01 }
+      let!(:price_2) { create :price, variant_id: variant.id, price_book_id: price_book_2.id, amount: 20.02 }
+      let(:order_1) { create :order, store_id: store_1.id }
+      let(:order_2) { create :order, store_id: store_2.id }
 
-      context "one active order promotion" do
-        let!(:action) { Spree::Promotion::Actions::CreateAdjustment.create(promotion: promotion, calculator: calculator) }
+      it "should set line item price to the proper variant price" do
+        line_item_1 = Spree::OrderContents.new(order_1).add variant
+        line_item_2 = Spree::OrderContents.new(order_2).add variant
 
-        it "creates valid discount on order" do
-          subject.add(variant, 1)
-          expect(subject.order.adjustments.to_a.sum(&:amount)).not_to eq 0
-        end
-
-        include_context "discount changes order total"
-      end
-
-      context "one active line item promotion" do
-        let!(:action) { Spree::Promotion::Actions::CreateItemAdjustments.create(promotion: promotion, calculator: calculator) }
-
-        it "creates valid discount on order" do
-          subject.add(variant, 1)
-          expect(subject.order.line_item_adjustments.to_a.sum(&:amount)).not_to eq 0
-        end
-
-        include_context "discount changes order total"
+        expect(line_item_1.price).to eq price_1.amount
+        expect(line_item_2.price).to eq price_2.amount
       end
     end
   end
