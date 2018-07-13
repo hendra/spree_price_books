@@ -31,7 +31,7 @@ module Spree
         variant_ids = @product.variants_including_master.pluck(:id)
 
         @price_book.prices.where(variant_id: variant_ids).destroy_all
-        redirect_to :back
+        redirect_back(fallback_location: spree.admin_price_book_path(@price_book))
       end
 
       def show

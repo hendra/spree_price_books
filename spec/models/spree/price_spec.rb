@@ -118,7 +118,7 @@ describe Spree::Price do
       @explicit_book = create :explicit_price_book
       @product = create :product, price: 10
       @explicit_book.prices.create amount: 4, variant_id: @product.master.id
-      @product.update_attribute :price, 9
+      @product.update price: 9
     end
 
     it 'should update price only to child price books on update' do

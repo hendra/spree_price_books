@@ -1,4 +1,4 @@
-class Spree::StorePriceBook < ActiveRecord::Base
+class Spree::StorePriceBook < ApplicationRecord
 
   belongs_to :price_book
   belongs_to :store
