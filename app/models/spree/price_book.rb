@@ -5,10 +5,10 @@ class Spree::PriceBook < ApplicationRecord
   belongs_to :role, class_name: 'Spree::Role'
 
   has_many :prices
+  has_many :variants, through: :prices
   has_many :products, -> { distinct }, through: :variants
   has_many :store_price_books
   has_many :stores, through: :store_price_books
-  has_many :variants, through: :prices
 
   validate :validate_currency_rate
   validate :validate_single_default
@@ -143,6 +143,13 @@ class Spree::PriceBook < ApplicationRecord
   end
 
   private
+
+  def price_adjustment_factor_changed?
+    # for Rails >= 5.1
+    return saved_change_to_price_adjustment_factor? if respond_to? :saved_change_to_price_adjustment_factor?
+    # Rails <= 5.0
+    super
+  end
 
   # When the adjustment factor is blank for a child price book of a foreign currency set the factor to the available exchange rate.
   def validate_currency_rate
