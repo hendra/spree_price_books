@@ -2,7 +2,7 @@ class Spree::PriceBook < ApplicationRecord
 
   acts_as_nested_set order_column: :priority
 
-  belongs_to :role, class_name: 'Spree::Role'
+  belongs_to :role, class_name: 'Spree::Role', optional: true
 
   has_many :prices
   has_many :variants, through: :prices
