@@ -44,7 +44,7 @@ module Spree
           book = store.store_price_books.where(price_book_id: id).first
           book.update_attribute(:priority, index) if book.present?
         end
-        render nothing: true
+        head :ok
       end
     end
   end
