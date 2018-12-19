@@ -2,7 +2,7 @@
 
   <div class="row">
     <div class="col-md-6">
-      <%= f.field_container :name do %>
+      <%= f.field_container :name, class: ['form-group'] do %>
         <%= f.label :name %> <span class="required">*</span><br />
         <%= f.text_field :name, class: "form-control" %>
         <%= f.error_message_on :name %>
@@ -13,30 +13,30 @@
     <div class="row">
       <div class="col-md-6">
         <%= f.label :currency, Spree.t(:choose_currency) %> <span class="required">*</span><br />
-        <%= f.select :currency, pb_currency_options(f.object.currency), class: 'form-control select2' %>
+        <%= f.select :currency, pb_currency_options(f.object.currency), {}, { class: 'select2' } %>
         <%= f.error_message_on :currency %>
       </div>
     </div>
 
   <div class="row">
     <div class="col-md-6">
-      <%= f.field_container :active_from do %>
-        <%= f.label :active_from %> <span class="required">*</span><br />
+      <%= f.field_container :active_from, class: ['form-group'] do %>
+        <%= f.label :active_from %><br />
         <%= f.text_field :active_from, class: 'form-control datepicker datepicker-from' %>
         <%= f.error_message_on :active_from %>
       <% end %>
     </div>
 
     <div class="col-md-6">
-      <%= f.field_container :active_to do %>
-        <%= f.label :active_to %> <span class="required">*</span><br />
+      <%= f.field_container :active_to, class: ['form-group'] do %>
+        <%= f.label :active_to %><br />
         <%= f.text_field :active_to, class: 'form-control datepicker datepicker-to' %>
         <%= f.error_message_on :active_to %>
       <% end %>
     </div>
 
     <div class="col-md-6">
-      <%= f.field_container :role_id do %>
+      <%= f.field_container :role_id, class: ['form-group'] do %>
         <%= f.label :role_id %><br />
         <%= f.collection_select :role_id, Spree::Role.all, :id, :name, { include_blank: true }, { class: 'select2' } %>
         <%= f.error_message_on :role_id %>
@@ -44,8 +44,8 @@
     </div>
 
     <div class="col-md-6">
-      <%= f.field_container :priority do %>
-        <%= f.label :priority %> <span class="required">*</span><br />
+      <%= f.field_container :priority, class: ['form-group'] do %>
+        <%= f.label :priority %><br />
         <%= f.text_field :priority, class: "form-control" %>
         <%= f.error_message_on :priority %>
       <% end %>
@@ -53,24 +53,21 @@
   </div>
 
   <div class="row">
-    <div class="col-md-12">
-      <%= f.field_container :parent do %>
-        <%= f.label :parent %> <span class="required">*</span><br />
+    <div class="col-md-6">
+      <%= f.field_container :parent, class: ['form-group'] do %>
+        <%= f.label :parent %><br />
         <%= f.collection_select(:parent_id, Spree::PriceBook.all - [f.object], :id, :name,
-              include_blank: true, selected: Spree::PriceBook.default.id, class: 'select2') %>
+              { include_blank: true }, { class: 'select2' }) %>
         <%= f.error_message_on :parent %>
       <% end %>
-    </div>
-    <div class="col-md-12">
-      <%= f.field_container :price_adjustment_factor do %>
+
+      <%= f.field_container :price_adjustment_factor, class: ['form-group'] do %>
         <%= f.label :price_adjustment_factor %> <span class="required">*</span><br />
         <%= f.text_field :price_adjustment_factor, class: 'form-control' %>
         <%= f.error_message_on :price_adjustment_factor %>
       <% end %>
-    </div>
 
-    <div class="col-md-12">
-      <%= f.field_container :discount do %>
+      <%= f.field_container :discount, class: ['form-group'] do %>
         <%= f.label :discount %><br />
         <%= f.check_box :discount %>
         <%= f.error_message_on :discount %>
