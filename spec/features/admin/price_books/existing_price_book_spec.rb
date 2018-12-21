@@ -20,7 +20,7 @@ describe "Price Books - Existing", type: :feature do
     click_icon :edit
 
     fill_in 'price_book_name', with: 'TEST'
-    select 'GEL', from: 'price_book_currency'
+    select2 'GEL', from: 'Choose Currency'
 
     click_button 'Update'
 

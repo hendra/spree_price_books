@@ -17,6 +17,7 @@ describe "PriceBooks Feature", type: :feature, js: true do
       fill_in 'price_book_name', with: 'TEST'
       select 'GEL', from: 'price_book_currency'
       fill_in 'price_book_priority', with: '12'
+      select 'Default', from: 'price_book_parent_id'
       fill_in 'price_book_price_adjustment_factor', with: '34'
       fill_in 'price_book_active_from', with: (Time.now - 1.day).strftime('%Y/%m/%d')
       fill_in 'price_book_active_to', with: (Time.now + 1.year).strftime('%Y/%m/%d')
