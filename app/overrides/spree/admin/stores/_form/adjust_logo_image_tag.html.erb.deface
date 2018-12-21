@@ -1,0 +1,3 @@
+<!-- replace 'erb[loud]:contains("image_tag @store.logo.url")' -->
+
+<%= image_tag @store.logo.url if @store.logo? %>
