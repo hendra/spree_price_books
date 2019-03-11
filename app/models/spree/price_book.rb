@@ -4,7 +4,7 @@ class Spree::PriceBook < ApplicationRecord
 
   belongs_to :role, class_name: 'Spree::Role', optional: true
 
-  has_many :prices
+  has_many :prices, dependent: :destroy
   has_many :variants, through: :prices
   has_many :products, -> { distinct }, through: :variants
   has_many :store_price_books

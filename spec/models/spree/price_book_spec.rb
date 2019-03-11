@@ -101,8 +101,21 @@ describe Spree::PriceBook do
     end
   end
 
-  it '#destroy' do
-    expect { Spree::PriceBook.default.destroy }.to raise_error(RuntimeError)
+  describe '#destroy' do
+    it 'prevents from delete default price book' do
+      expect { Spree::PriceBook.default.destroy }.to raise_error(RuntimeError)
+    end
+
+    context 'given a non-default price book' do
+      let!(:price_book) { create :price_book }
+      let(:variant) { create :variant }
+
+      before { variant.prices.create! price_book_id: price_book.id, amount: 10 }
+
+      it 'destroys dependent rows' do
+        expect { price_book.destroy }.to change { Spree::Price.where(price_book_id: price_book).count }.from(1).to(0)
+      end
+    end
   end
 
   it '#discount_price_book?' do
